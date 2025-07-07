@@ -27,9 +27,7 @@ class Indexer:
         return data
 
     def index(self):
-        cycle = {
-
-        }
+        cycle = {}
         os.makedirs(self.collection_name, exist_ok=True)
         dir_path = Path(self.collection_name)
         for file in dir_path.iterdir():
