@@ -19,4 +19,4 @@ import brain_dump
 i = brain_dump.Indexer("media")
 i.index()
 
-print(i.query("test"))
+print(i.query("test",after=brain_dump.Date(year=2025,month=8,day=1)))

@@ -4,6 +4,8 @@ import os
 import json
 from pathlib import Path
 from datetime import datetime
+from brain_dump._models import Date
+from typing import Optional
 
 
 class Indexer:
@@ -59,7 +61,8 @@ class Indexer:
                     ids=[k],
                     documents=[v[1]], # 0 = filename, 1 = content
                     metadatas=[{
-                        "timestamp": datetime.now().strftime("%A %B %d %Y, %I:%M %p")
+                        "timestamp": datetime.now().timestamp(),
+                        "timestamp_read":datetime.now().strftime("%A %B %d %Y, %I:%M %p"),
                     }]
                 )
                 fingerprints[k] = v[0]
@@ -67,8 +70,24 @@ class Indexer:
         with open(f"fingerprints/{self.collection_name}.json", "w", encoding="utf-8") as f:
             json.dump(fingerprints, f, indent=4)
 
-    def query(self, query: str, n: int = 10):
+    def query(self, query: str, n: int = 10, before: Optional[Date] = None, after: Optional[Date] = None):
+        before_date = before
+        if before is None:
+            before_date = datetime.now()
+        else:
+            before_date = datetime(before.year, before.month, before.day)
+        after_date = after
+        if after is None:
+            after_date = datetime(1,1,1)
+        else:
+            after_date = datetime(after.year, after.month, after.day)
         return self.collection.query(
             query_texts=[query],
-            n_results=n
+            n_results=n,
+            where={
+                "$and": [
+                    {"timestamp": {"$gte": after_date.timestamp()}},
+                    {"timestamp": {"$lte": before_date.timestamp()}}
+                ]
+            }
         )
