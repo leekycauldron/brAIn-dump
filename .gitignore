@@ -1,5 +1,9 @@
 /venv/
+/database/*
+/fingerprints/
 /media/*
 !*/.gitkeep
 *.env
 /.vscode/
+*.egg-info
+*/__pycache__/
