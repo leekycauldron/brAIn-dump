@@ -75,11 +75,15 @@ class Indexer:
         if before is None:
             before_date = datetime.now()
         else:
+            print("before is not none")
             before_date = datetime(before.year, before.month, before.day)
         after_date = after
         if after is None:
+            print('hi')
             after_date = datetime(1,1,1)
+            print('bye')
         else:
+            print("after is not none")
             after_date = datetime(after.year, after.month, after.day)
         return self.collection.query(
             query_texts=[query],

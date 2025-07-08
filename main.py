@@ -12,11 +12,20 @@
 # TODO: Medical Knowledge?
 # TODO: Setup scripts (to install ollama and make sure libraries are installed)
 # TODO: Change README so anyone can run and customize
-
+# TODO: Smart auto entry? (i talk about how last year something happened, automatically create a entry with the timestamp being a year ago)
+# TODO: Create a logger + web interface for clean conversations/
+# TODO: Create journaller interface for autonaming + tagging.
 import brain_dump
 
 
 i = brain_dump.Indexer("media")
 i.index()
 
-print(i.query("test",after=brain_dump.Date(year=2025,month=8,day=1)))
+c = brain_dump.Client("llama3.2")
+try:
+    while True:
+        print("[Assistant]:",c.chat(input("[User]: ")))
+except Exception as e:
+    print("Error:",e)
+finally:
+    c.close()
