@@ -9,6 +9,7 @@ from brain_dump._indexer import Indexer
 from brain_dump._models import Date
 import os
 import json
+from jinja2 import Template
 
 
 tools = [
@@ -34,7 +35,7 @@ tools = [
                     },
                     "n": {
                         "type": "number",
-                        "description": "Limit results to an integer, n. This is not the last n entries, it will be random."
+                        "description": "Limit results to a positive integer, n. This is not the last n entries, it will be random."
                     },
                     "before": {
                         "type": "object",
@@ -92,11 +93,29 @@ tools = [
     
 ]
 
+def generate_dev_prompt():
+    with open(os.path.join("brain_dump","prompt"), "r", encoding="utf-8") as f:
+        template_str = f.read()
+
+    template = Template(template_str)
+
+    filled_prompt = template.render(
+        current_time=datetime.now().strftime("%A %B %d %Y, %I:%M %p")
+    )
+    dir_path = Path(os.path.join("brain_dump","examples"))
+    for file in dir_path.iterdir():
+        if file.is_file():
+            with open(file.resolve(),'r') as f:
+                content = f.read()
+            filled_prompt+=f"\n###\n{file.name}:\n{content}"
+    print(filled_prompt)
+    return filled_prompt
+
 class Client:
     def __init__(self, model: str) -> None:
         timeout = 20
         self.model = model
-        self.context = [{"role": "system", "content": Path(os.path.join("brain_dump","prompt")).read_text(encoding='utf-8').strip() + datetime.now().strftime("%A %B %d %Y, %I:%M %p")}]
+        self.context = [{"role": "system", "content": generate_dev_prompt()}]
         self.process = subprocess.Popen(
             ["ollama", "run", model],
             stdout=subprocess.DEVNULL,

@@ -21,7 +21,7 @@ import brain_dump
 i = brain_dump.Indexer("media")
 i.index()
 
-c = brain_dump.Client("llama3.2")
+c = brain_dump.Client("qwen3")
 try:
     while True:
         print("[Assistant]:",c.chat(input("[User]: ")))
