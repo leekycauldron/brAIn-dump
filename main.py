@@ -4,7 +4,7 @@
 # Save conversation and index it.
 
 
-# TODO: Connect tools to LLM for getting data.
+
 # TODO: Create a way for the LLM to focus more on the most recent (same day) entries and work with that (should be a simply metadata filter)
 # TODO: Add conversation to RAG
 # TODO: Multi-Modal Media
@@ -15,17 +15,3 @@
 # TODO: Smart auto entry? (i talk about how last year something happened, automatically create a entry with the timestamp being a year ago)
 # TODO: Create a logger + web interface for clean conversations/
 # TODO: Create journaller interface for autonaming + tagging.
-import brain_dump
-
-
-i = brain_dump.Indexer("media")
-i.index()
-
-c = brain_dump.Client("qwen3")
-try:
-    while True:
-        print("[Assistant]:",c.chat(input("[User]: ")))
-except Exception as e:
-    print("Error:",e)
-finally:
-    c.close()

@@ -80,7 +80,7 @@ class Indexer:
         after_date = after
         if after is None:
             print('hi')
-            after_date = datetime(1,1,1)
+            after_date = datetime(2,1,1)
             print('bye')
         else:
             print("after is not none")

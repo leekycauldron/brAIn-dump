@@ -174,7 +174,7 @@ class Client:
                     
                     output = i.query(
                         query=str(args.get("query")),
-                        n=args.get("n"),
+                        n=args.get("n", 10),
                         before=before_date,
                         after=after_date
                         )

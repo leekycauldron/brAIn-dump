@@ -1,2 +1,7 @@
 chromadb==1.0.15
+fastapi==0.116.1
+Jinja2==3.1.6
 ollama==0.5.1
+pydantic==2.11.7
+Requests==2.32.4
+uvicorn==0.35.0
