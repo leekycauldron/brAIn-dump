@@ -5,10 +5,6 @@ description = "An offline, private, and secure AI journalling tool."
 readme = "README.md"
 requires-python = ">=3.9"
 
-dependencies = [
-    "ollama",
-    "chromadb",
-]
 
 [build-system]
 requires = ["setuptools", "wheel"]
