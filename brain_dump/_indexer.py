@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from datetime import datetime
 from brain_dump._models import Date
+from brain_dump._parser import Transcriber
 from typing import Optional
 
 
@@ -13,6 +14,7 @@ class Indexer:
         self.chroma_client = chromadb.PersistentClient(path="database")
         self.collection_name = collection
         self.collection = self.chroma_client.get_or_create_collection(name=collection)
+        self.transcriber = Transcriber()
 
     def fingerprint(self, file_name: str, content: str):
         base = f"{file_name}{content}"
@@ -39,11 +41,15 @@ class Indexer:
                 print(f"Full path: {file.resolve()}")
                 print(f"Filename : {file.name}")
                 print("-" * 40)
-                content = ""
+                f_content = content = "" # f_content is used when using AI models to get content of audio or image. Its non deterministic nature means I can't use the output for the fingerprint.
                 if file.name.endswith(".txt"):
                     with open(file.resolve(),'r') as f:
-                       content = f.read() 
-                cycle[self.fingerprint(file.name, content)] = [file.name, content]
+                       f_content = content = f.read() 
+                if file.name.endswith((".mp3", ".wav")):
+                    with open(file.resolve(), "rb") as f:
+                        f_content = f.read()
+                    content = self.transcriber.transcribe(str(file.resolve()))
+                cycle[self.fingerprint(file.name, f_content)] = [file.name, content]
         fingerprints = self.get_fingerprints()
         print("Looped through dir, found: " + str(cycle))
         # Delete any old documents from index.
@@ -70,20 +76,18 @@ class Indexer:
         with open(f"fingerprints/{self.collection_name}.json", "w", encoding="utf-8") as f:
             json.dump(fingerprints, f, indent=4)
 
+        self.transcriber.close()
+
     def query(self, query: str, n: int = 10, before: Optional[Date] = None, after: Optional[Date] = None):
         before_date = before
         if before is None:
             before_date = datetime.now()
         else:
-            print("before is not none")
             before_date = datetime(before.year, before.month, before.day)
         after_date = after
         if after is None:
-            print('hi')
             after_date = datetime(2,1,1)
-            print('bye')
         else:
-            print("after is not none")
             after_date = datetime(after.year, after.month, after.day)
         return self.collection.query(
             query_texts=[query],

@@ -15,3 +15,5 @@
 # TODO: Smart auto entry? (i talk about how last year something happened, automatically create a entry with the timestamp being a year ago)
 # TODO: Create a logger + web interface for clean conversations/
 # TODO: Create journaller interface for autonaming + tagging.
+# TODO: Create audio cleaning tools (speaker diarization, background remover... (use biographer tech))
+# TODO: Auto kill ps + freemem
