@@ -10,11 +10,11 @@ from typing import Optional
 
 
 class Indexer:
-    def __init__(self, collection: str):
+    def __init__(self, collection: str, transcribe_model: str = "medium"):
         self.chroma_client = chromadb.PersistentClient(path="database")
         self.collection_name = collection
         self.collection = self.chroma_client.get_or_create_collection(name=collection)
-        self.transcriber = Transcriber()
+        self.transcriber = Transcriber(transcribe_model)
 
     def fingerprint(self, file_name: str, content: str):
         base = f"{file_name}{content}"

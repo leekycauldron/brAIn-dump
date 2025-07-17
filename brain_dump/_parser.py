@@ -3,7 +3,7 @@ import torch
 import gc
 
 class Transcriber:
-    def __init__(self, model="large"):
+    def __init__(self, model="tiny"):
         self._model = whisper.load_model(model)
         print("Transcriber loaded.")
 
@@ -13,6 +13,7 @@ class Transcriber:
     def close(self):
         del self._model
         torch.cuda.empty_cache()
+        torch.cuda.ipc_collect()
         gc.collect()
 
 if __name__ == "__main__":

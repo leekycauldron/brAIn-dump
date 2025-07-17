@@ -1,11 +1,11 @@
 import brain_dump
 
 
-i = brain_dump.Indexer("media")
-i.index()
+#i = brain_dump.Indexer("media", "small")
+#i.index()
 
 try:
-    brain_dump.server.serve("qwen2.5:14b")
+    brain_dump.server.serve("llama3.2")
 except KeyboardInterrupt:
     pass
 finally:
